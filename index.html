@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html>
+
+<!-- John Delavega, john@delavega.US 11/29/2017 -->
+
+<head>
+    <title>WebVR demo, animation, video</title>
+
+    <script src="aframe.min.js"></script>
+    <script src="three.min.js"></script>
+
+</head>
+
+<body>
+    v001
+
+    <!-- =========================================================== -->
+
+    <script>
+        AFRAME.registerComponent('my-threejs-torus', {
+            schema: {
+                color: {
+                    default: '#000'
+                },
+                wireframe: {
+                    default: false
+                },
+            },
+
+            update: function() {
+                var material = new THREE.MeshBasicMaterial({
+                    color: this.data.color,
+                    wireframe: true
+                });
+
+                var material2 = new THREE.MeshPhongMaterial({
+                    wireframe: this.data.wireframe,
+                    color: this.data.color,
+                    shininess: 150,
+                    specular: 0x222222,
+                    shading: THREE.SmoothShading,
+                });
+
+
+
+                var geometry = new THREE.TorusKnotGeometry(25, 8, 75, 20);
+                var mesh1 = new THREE.Mesh(geometry, material2);
+                mesh1.scale.multiplyScalar(1 / 2);
+
+                this.el.setObject3D('mesh', mesh1);
+
+
+
+            }, // update
+
+            tick: function(t, dt) {
+
+                var el = this.el;
+                var rotationTmp = this.rotationTmp = this.rotationTmp || {
+                    x: 0,
+                    y: 0,
+                    z: 0
+                };
+                var rotation = el.getAttribute('rotation');
+                rotationTmp.x = rotation.x + 0.3;
+                rotationTmp.y = rotation.y + 0.3;
+                rotationTmp.z = rotation.z + 0.1;
+                el.setAttribute('rotation', rotationTmp);
+
+            }, // tick
+
+            remove: function() {
+                    this.el.removeObject3D('mesh');
+                } // remove
+        }); // my-threejs-torus
+
+        // ===========================================================
+
+        AFRAME.registerComponent('my-threejs-box', {
+            schema: {
+                color: {
+                    default: '#000'
+                },
+            },
+
+            update: function() {
+                var material = new THREE.MeshBasicMaterial({
+                    color: this.data.color,
+                    wireframe: false
+                });
+
+                var material2 = new THREE.MeshPhongMaterial({
+                    color: this.data.color,
+                    shininess: 150,
+                    specular: 0x222222,
+                    shading: THREE.SmoothShading
+                });
+
+
+                var geometryBox = new THREE.BoxGeometry(1, 1, 1.5);
+                var meshBox = new THREE.Mesh(geometryBox, material2);
+
+
+                meshBox.scale.multiplyScalar(10);
+
+                this.el.setObject3D('mesh', meshBox);
+
+            }, // update
+
+            tick: function(t, dt) {
+
+                var el = this.el;
+                var rotationTmp = this.rotationTmp = this.rotationTmp || {
+                    x: 0,
+                    y: 0,
+                    z: 0
+                };
+                var rotation = el.getAttribute('rotation');
+                rotationTmp.x = rotation.x + 0.1;
+                rotationTmp.y = rotation.y + 0.1;
+                rotationTmp.z = rotation.z + 0.1;
+                el.setAttribute('rotation', rotationTmp);
+
+            }, // tick
+
+            remove: function() {
+                    this.el.removeObject3D('mesh');
+                } // remove
+        }); // my-threejs-box
+
+        // ===========================================================
+
+        AFRAME.registerComponent('rotate2', {
+            tick: function(t, dt) {
+                var el = this.el;
+                var rotationTmp = this.rotationTmp = this.rotationTmp || {
+                    x: 0,
+                    y: 0,
+                    z: 0
+                };
+                var rotation = el.getAttribute('rotation');
+                rotationTmp.x = rotation.x + 0.3;
+                rotationTmp.y = rotation.y + 0.5;
+                rotationTmp.z = rotation.z + 1;
+                el.setAttribute('rotation', rotationTmp);
+            }
+        });
+    </script>
+
+    <!-- egd1 -->
+    <!-- egd1 -->
+
+    <!-- =========================================================== -->
+
+    <a-scene>
+        <!-- position -left/+right +up/-down -front/+back -->
+
+        <!-- egd1 -->
+        <a-entity my-threejs-torus="color: green; wireframe: true" position="10 11 -11"> </a-entity>
+
+        <a-entity my-threejs-box="color: gray;" scale="2 2 3" position="-19 -11 -115"> </a-entity>
+
+        <a-entity my-threejs-torus="color: blue; wireframe: true;" position="10 11 -115"> </a-entity>
+
+        <!-- back -->
+        <a-entity my-threejs-torus="color: green;" position="10 51 115"> </a-entity>
+
+        <a-entity my-threejs-torus="color: red;" position="100 1 0"> </a-entity>
+
+        <a-entity my-threejs-torus="color: yellow;" position="-100 1 0"> </a-entity>
+
+        <a-entity my-threejs-torus="color: yellow;" position="0 100 0"> </a-entity>
+
+        <!-- down -->
+        <a-entity my-threejs-torus="color: green; wireframe: true;" position="0 -100 0"> </a-entity>
+
+        <a-video rotation="0 -20 0" src="SampleVideo_1280x720_1mb.mp4" width="24" height="17" position="0 0 25"></a-video>
+
+        <a-cylinder rotate2 position="1 1 -5" radius="0.5" height="1.9" rotation="0 1 0" color="#ffff00"></a-cylinder>
+        <a-cylinder rotate2 position="1 1 -1" radius="0.2" height="1.5" rotation="3 50 100" color="#00ff00"></a-cylinder>
+
+        <a-entity position="0 14 -7" rotation="20 20 0" text="font: mozillavr.fnt; value: john@delavega.US; width: 15; height: 15; color: blue;"></a-entity>
+
+    </a-scene>
+</body>
+
+</html>
